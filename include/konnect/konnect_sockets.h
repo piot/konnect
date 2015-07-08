@@ -21,19 +21,31 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-#include "konnect/konnect_sockets.h"
-#include "konnect/konnect_platform.h"
+#ifndef KONNECT_SOCKETS_H
+#define KONNECT_SOCKETS_H
 
-int konnect_sockets_init()
-{
+#include "konnect_platform.h"
+
 #if defined KONNECT_OS_WINDOWS
-	int		result;
-	WSADATA wsa_data;
-
-	result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-	if (result != 0) {
-		return -1;
-	}
+#include <Winsock2.h>
+#include <Ws2tcpip.h>
+#else
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 #endif
-	return 0;
-}
+
+#if defined KONNECT_OS_WINDOWS
+#define KONNECT_SOCKET_HANDLE	SOCKET
+#define KONNECT_SOCKET_CLOSE	closesocket
+#else
+#define KONNECT_SOCKET_HANDLE	int
+#include <unistd.h>
+#define KONNECT_SOCKET_CLOSE	close
+#endif
+int						konnect_sockets_init();
+
+typedef unsigned char	uint8_t;
+
+#endif

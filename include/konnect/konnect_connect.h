@@ -21,19 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-#include "konnect/konnect_sockets.h"
-#include "konnect/konnect_platform.h"
+#ifndef KONNECT_CONNECT_H
+#define KONNECT_CONNECT_H
 
-int konnect_sockets_init()
-{
-#if defined KONNECT_OS_WINDOWS
-	int		result;
-	WSADATA wsa_data;
+#include "konnect_socket.h"
 
-	result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-	if (result != 0) {
-		return -1;
-	}
+int konnect_connect_init(konnect_socket *self, const char *address, int port);
+
 #endif
-	return 0;
-}

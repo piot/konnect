@@ -21,19 +21,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-#include "konnect/konnect_sockets.h"
-#include "konnect/konnect_platform.h"
+#ifndef KONNECT_LISTEN_H
+#define KONNECT_LISTEN_H
 
-int konnect_sockets_init()
+#include "konnect_socket.h"
+
+typedef struct konnect_listen
 {
-#if defined KONNECT_OS_WINDOWS
-	int		result;
-	WSADATA wsa_data;
+	konnect_socket	socket;
+} konnect_listen;
 
-	result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-	if (result != 0) {
-		return -1;
-	}
+int				konnect_listen_init(konnect_listen *self, int port);
+konnect_socket	*konnect_listen_accept(konnect_listen *self);
+int				konnect_listen_close(konnect_listen *self);
+
 #endif
-	return 0;
-}

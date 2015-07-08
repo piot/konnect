@@ -21,19 +21,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-#include "konnect/konnect_sockets.h"
-#include "konnect/konnect_platform.h"
+#include "konnect/konnect_connect.h"
+#include "konnect/konnect_error.h"
+#include "konnect/konnect_log.h"
+#include "konnect/konnect_utils.h"
 
-int konnect_sockets_init()
-{
-#if defined KONNECT_OS_WINDOWS
-	int		result;
-	WSADATA wsa_data;
-
-	result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-	if (result != 0) {
-		return -1;
-	}
+#if !defined KONNECT_OS_WINDOWS
+#include <arpa/inet.h>
 #endif
-	return 0;
+
+int konnect_connect_init(konnect_socket *self, const char *address, int port)
+{
+	KONNECT_ZERO_MEMORY(self);
+
+	int create_error = konnect_socket_tcp_create_handle(self);
+	if (create_error) {
+		konnect_error(create_error, "connect: create_handle");
+		return create_error;
+	}
+
+	struct sockaddr_in	addr;
+	addr.sin_family = AF_INET;
+
+	int convert_error = !inet_pton(AF_INET, address, &addr.sin_addr);
+	if (convert_error) {
+		konnect_error(convert_error, "connect: inet_aton");
+		return convert_error;
+	}
+
+	addr.sin_port = htons(port);
+
+	int connect_error = connect(self->handle, (struct sockaddr *) &addr, sizeof(addr));
+	if (connect_error) {
+		konnect_error(connect_error, "connect:connect");
+	}
+
+	return connect_error;
 }

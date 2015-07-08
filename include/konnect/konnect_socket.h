@@ -21,19 +21,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-#include "konnect/konnect_sockets.h"
-#include "konnect/konnect_platform.h"
+#ifndef KONNECT_SOCKET_H
+#define KONNECT_SOCKET_H
 
-int konnect_sockets_init()
+#include "konnect_sockets.h"
+
+typedef struct konnect_socket
 {
-#if defined KONNECT_OS_WINDOWS
-	int		result;
-	WSADATA wsa_data;
+	KONNECT_SOCKET_HANDLE	handle;
+	int						should_be_freed;
+} konnect_socket;
 
-	result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-	if (result != 0) {
-		return -1;
-	}
+int				konnect_socket_tcp_init(konnect_socket *self, KONNECT_SOCKET_HANDLE handle);
+konnect_socket	*konnect_socket_tcp_new();
+int				konnect_socket_tcp_create_handle(konnect_socket *self);
+int				konnect_socket_tcp_options(KONNECT_SOCKET_HANDLE handle, int option_name, int flag);
+int				konnect_socket_socket_option(KONNECT_SOCKET_HANDLE handle, int option_name, int flag);
+int				konnect_socket_bind_to_local_port(konnect_socket *self, int port);
+int				konnect_socket_receive(konnect_socket *self, void *buffer, size_t max_length);
+int				konnect_socket_send(konnect_socket *self, const void *buffer, size_t length);
+int				konnect_socket_close(konnect_socket *self);
+
 #endif
-	return 0;
-}

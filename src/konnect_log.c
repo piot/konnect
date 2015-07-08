@@ -21,19 +21,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-#include "konnect/konnect_sockets.h"
-#include "konnect/konnect_platform.h"
+#include <stdarg.h>
+#include <stdio.h>
 
-int konnect_sockets_init()
+static void internal_log(const char *format, va_list ap)
 {
-#if defined KONNECT_OS_WINDOWS
-	int		result;
-	WSADATA wsa_data;
+	char	buf[1024];
 
-	result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-	if (result != 0) {
-		return -1;
-	}
+	if (
+#ifdef KONNECT_OS_WINDOWS
+	_vsnprintf(buf, sizeof(buf), format, ap)
+#else
+	vsnprintf(buf, sizeof(buf), format, ap)
 #endif
-	return 0;
+	< 0) {
+		buf[sizeof(buf) - 1] = '\0';
+	}
+
+	fprintf(stdout, "%s\n", buf);
+	fflush(stdout);
+}
+
+void konnect_log(const char *format, ...)
+{
+	va_list argument_list;
+
+	va_start(argument_list, format);
+	internal_log(format, argument_list);
+	va_end(argument_list);
 }
