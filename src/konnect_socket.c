@@ -27,6 +27,8 @@ THE SOFTWARE.
 #include "konnect/konnect_utils.h"
 #include "konnect/konnect_log.h"
 
+#include <fcntl.h>
+
 static int konnect_socket_option(KONNECT_SOCKET_HANDLE handle, int level, int option_name, int flag)
 {
 	int error = setsockopt(handle, level, option_name, (char *) &flag, sizeof(flag));
@@ -107,4 +109,37 @@ int konnect_socket_close(konnect_socket *self)
 	}
 
 	return close_error;
+}
+
+int konnect_socket_non_blocking(konnect_socket* self, int non_blocking)
+{
+	int flags = fcntl(self->handle, F_GETFL, 0);
+	if (flags == -1) {
+		return -1;
+	}
+	if (non_blocking) {
+		flags |= O_NONBLOCK;
+	} else {
+		flags &= ~O_NONBLOCK;
+	}
+	return fcntl(self->handle, F_SETFL, flags);
+}
+
+int konnect_socket_select_write(konnect_socket* self, int seconds)
+{
+	fd_set set;
+
+	FD_ZERO(&set);
+	FD_SET(self->handle, &set);
+
+	struct timeval timeout;
+	timeout.tv_sec = seconds;
+	timeout.tv_usec = 0;
+
+	int descriptors_ready = select(self->handle + 1, 0, &set, 0, &timeout);
+	if (descriptors_ready != 1) {
+		return -1;
+	}
+
+	return 0;
 }

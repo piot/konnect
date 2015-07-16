@@ -41,5 +41,8 @@ int				konnect_socket_bind_to_local_port(konnect_socket *self, int port);
 int				konnect_socket_receive(konnect_socket *self, void *buffer, size_t max_length);
 int				konnect_socket_send(konnect_socket *self, const void *buffer, size_t length);
 int				konnect_socket_close(konnect_socket *self);
+int				konnect_socket_non_blocking(konnect_socket* self, int non_blocking);
+int				konnect_socket_select_write(konnect_socket* self, int seconds);
+
 
 #endif

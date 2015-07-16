@@ -25,6 +25,10 @@ THE SOFTWARE.
 #include "konnect/konnect_error.h"
 #include "konnect/konnect_log.h"
 #include "konnect/konnect_utils.h"
+#include "konnect/konnect_socket.h"
+
+#include <sys/errno.h>
+
 
 #if !defined KONNECT_OS_WINDOWS
 #include <arpa/inet.h>
@@ -51,10 +55,28 @@ int konnect_connect_init(konnect_socket *self, const char *address, int port)
 
 	addr.sin_port = htons(port);
 
-	int connect_error = connect(self->handle, (struct sockaddr *) &addr, sizeof(addr));
-	if (connect_error) {
-		konnect_error(connect_error, "connect:connect");
+	int non_block_result = konnect_socket_non_blocking(self, 1);
+	if (non_block_result) {
+		return konnect_error(create_error, "non blocking");
 	}
 
-	return connect_error;
+	int connect_error = connect(self->handle, (struct sockaddr *) &addr, sizeof(addr));
+	if (connect_error) {
+		if (errno != EINPROGRESS) {
+			konnect_log("errno:%d", errno);
+			return konnect_error(connect_error, "connect:connect");
+		}
+	}
+
+	int select_error = konnect_socket_select_write(self, 2);
+	if (select_error) {
+		return konnect_error(select_error, "select");
+	}
+
+	int block_result = konnect_socket_non_blocking(self, 0);
+	if (block_result) {
+		return konnect_error(create_error, "blocking");
+	}
+
+	return 0;
 }
