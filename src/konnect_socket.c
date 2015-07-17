@@ -113,6 +113,15 @@ int konnect_socket_close(konnect_socket *self)
 
 int konnect_socket_non_blocking(konnect_socket* self, int non_blocking)
 {
+#if defined KONNECT_OS_WINDOWS
+	u_long mode = non_blocking;
+	int result = ioctlsocket(self->handle, FIONBIO, &mode);
+	if (result != NO_ERROR)
+	{
+  		return konnect_error(result, "ioctlsocket failed with error");
+	}
+	return 0;
+#else
 	int flags = fcntl(self->handle, F_GETFL, 0);
 	if (flags == -1) {
 		return -1;
@@ -123,6 +132,7 @@ int konnect_socket_non_blocking(konnect_socket* self, int non_blocking)
 		flags &= ~O_NONBLOCK;
 	}
 	return fcntl(self->handle, F_SETFL, flags);
+#endif
 }
 
 int konnect_socket_select_write(konnect_socket* self, int seconds)

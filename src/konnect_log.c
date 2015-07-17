@@ -38,8 +38,13 @@ static void internal_log(const char *format, va_list ap)
 		buf[sizeof(buf) - 1] = '\0';
 	}
 
+#ifdef KONNECT_OS_WINDOWS
+	OutputDebugString(buf);
+	OutputDebugString("\n");
+#else
 	fprintf(stdout, "%s\n", buf);
 	fflush(stdout);
+#endif
 }
 
 void konnect_log(const char *format, ...)

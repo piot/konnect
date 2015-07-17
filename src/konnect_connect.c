@@ -27,12 +27,20 @@ THE SOFTWARE.
 #include "konnect/konnect_utils.h"
 #include "konnect/konnect_socket.h"
 
-#include <sys/errno.h>
-
 
 #if !defined KONNECT_OS_WINDOWS
+#include <sys/errno.h>
 #include <arpa/inet.h>
 #endif
+
+int konnect_get_last_error()
+{
+#if defined KONNECT_OS_WINDOWS
+	return WSAGetLastError();
+#else
+	return errno;
+#endif
+}
 
 int konnect_connect_init(konnect_socket *self, const char *address, int port)
 {
@@ -62,8 +70,9 @@ int konnect_connect_init(konnect_socket *self, const char *address, int port)
 
 	int connect_error = connect(self->handle, (struct sockaddr *) &addr, sizeof(addr));
 	if (connect_error) {
-		if (errno != EINPROGRESS) {
-			konnect_log("errno:%d", errno);
+		int socket_error = konnect_get_last_error();
+		if ((socket_error != KONNECT_INPROGRESS_ERROR) && (socket_error != KONNECT_WOULDBLOCK_ERROR)) {
+			konnect_log("socket_error:%d", socket_error);
 			return konnect_error(connect_error, "connect:connect");
 		}
 	}
