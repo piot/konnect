@@ -24,6 +24,6 @@ THE SOFTWARE.
 #ifndef KONNECT_ERROR_H
 #define KONNECT_ERROR_H
 
-int konnect_error(int error, const char *message);
+int konnect_error(int error, const char* message);
 
 #endif

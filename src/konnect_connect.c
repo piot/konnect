@@ -27,7 +27,6 @@ THE SOFTWARE.
 #include "konnect/konnect_utils.h"
 #include "konnect/konnect_socket.h"
 
-
 #if !defined KONNECT_OS_WINDOWS
 #include <sys/errno.h>
 #include <arpa/inet.h>
@@ -42,7 +41,7 @@ int konnect_get_last_error()
 #endif
 }
 
-int konnect_connect_init(konnect_socket *self, const char *address, int port)
+int konnect_connect_init(konnect_socket* self, const char* address, int port)
 {
 	KONNECT_ZERO_MEMORY(self);
 
@@ -52,7 +51,7 @@ int konnect_connect_init(konnect_socket *self, const char *address, int port)
 		return create_error;
 	}
 
-	struct sockaddr_in	addr;
+	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
 
 	int convert_error = !inet_pton(AF_INET, address, &addr.sin_addr);
@@ -68,7 +67,7 @@ int konnect_connect_init(konnect_socket *self, const char *address, int port)
 		return konnect_error(create_error, "non blocking");
 	}
 
-	int connect_error = connect(self->handle, (struct sockaddr *) &addr, sizeof(addr));
+	int connect_error = connect(self->handle, (struct sockaddr*) &addr, sizeof(addr));
 	if (connect_error) {
 		int socket_error = konnect_get_last_error();
 		if ((socket_error != KONNECT_INPROGRESS_ERROR) && (socket_error != KONNECT_WOULDBLOCK_ERROR)) {

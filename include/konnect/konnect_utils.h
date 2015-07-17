@@ -26,5 +26,5 @@ THE SOFTWARE.
 
 #include <string.h>
 
-#define KONNECT_ZERO_MEMORY(data)	memset(data, 0, sizeof(*data))
+#define KONNECT_ZERO_MEMORY(data) memset(data, 0, sizeof(*data))
 #endif

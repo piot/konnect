@@ -1,6 +1,5 @@
 /*$6*/
 
-
 #include "konnect/konnect_sockets.h"
 #include "konnect/konnect_listen.h"
 #include "konnect/konnect_connect.h"
@@ -11,23 +10,23 @@
 int server()
 {
 	konnect_log("server");
-	konnect_listen	listen;
-	int				error = konnect_listen_init(&listen, 23000);
+	konnect_listen listen;
+	int error = konnect_listen_init(&listen, 23000);
 	if (error) {
 		konnect_log("couldn't listen:%d", error);
 		return error;
 	}
 
 	while (1) {
-			konnect_log("accept");
+		konnect_log("accept");
 
-		konnect_socket	*socket = konnect_listen_accept(&listen);
+		konnect_socket* socket = konnect_listen_accept(&listen);
 		if (socket) {
 			konnect_log("connected!");
 			while (1) {
-				char	data[1024];
+				char data[1024];
 
-				int		octets_received = konnect_socket_receive(socket, data, sizeof(data));
+				int octets_received = konnect_socket_receive(socket, data, sizeof(data));
 				if (octets_received == 0) {
 					konnect_log("Disconnected");
 					return -1;
@@ -35,10 +34,10 @@ int server()
 
 				data[octets_received] = 0;
 
-				const char	*reply = "Got it!";
+				const char* reply = "Got it!";
 				konnect_socket_send(socket, reply, strlen(reply));
 
-				char	*command;
+				char* command;
 				if ((command = strchr(data, '\r')) != 0) {
 					konnect_log("chopping");
 					*command = '\0';
@@ -50,8 +49,7 @@ int server()
 					return -2;
 				}
 			}
-		}
-		else {
+		} else {
 			konnect_log("Accept failed");
 			return -1;
 		}
@@ -67,21 +65,22 @@ int client()
 		return connect_error;
 	}
 
-	const char* get = "GET / HTTP/1.1\r\nHost: www.something.org/\r\nConnection: close\r\n\r\n";
+	const char* get = "GET / HTTP/1.1\r\nHost: "
+					  "www.something.org/\r\nConnection: close\r\n\r\n";
 
 	konnect_socket_send(&connection, get, strlen(get));
 
 	while (1) {
-				char	data[1024];
+		char data[1024];
 
-				int		octets_received = konnect_socket_receive(&connection, data, sizeof(data));
-				if (octets_received == 0) {
-					konnect_log("Disconnected");
-					return -1;
-				} else {
-					data[octets_received] = '\0';
-					konnect_log("received '%s'", data);
-				}
+		int octets_received = konnect_socket_receive(&connection, data, sizeof(data));
+		if (octets_received == 0) {
+			konnect_log("Disconnected");
+			return -1;
+		} else {
+			data[octets_received] = '\0';
+			konnect_log("received '%s'", data);
+		}
 	}
 
 	konnect_socket_close(&connection);
@@ -89,7 +88,7 @@ int client()
 	return 0;
 }
 
-int main(int argc, const char *argv[])
+int main(int argc, const char* argv[])
 {
 	konnect_sockets_init();
 	// server();

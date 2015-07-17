@@ -26,6 +26,6 @@ THE SOFTWARE.
 
 #include "konnect_socket.h"
 
-int konnect_connect_init(konnect_socket *self, const char *address, int port);
+int konnect_connect_init(konnect_socket* self, const char* address, int port);
 
 #endif

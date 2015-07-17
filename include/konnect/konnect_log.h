@@ -24,6 +24,6 @@ THE SOFTWARE.
 #ifndef KONNECT_LOG_H
 #define KONNECT_LOG_H
 
-void	konnect_log(const char *format, ...);
+void konnect_log(const char* format, ...);
 
 #endif

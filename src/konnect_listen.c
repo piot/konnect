@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include "konnect/konnect_error.h"
 #include "konnect/konnect_utils.h"
 
-int konnect_listen_init(konnect_listen *self, int port)
+int konnect_listen_init(konnect_listen* self, int port)
 {
 	KONNECT_ZERO_MEMORY(self);
 
@@ -53,11 +53,11 @@ int konnect_listen_init(konnect_listen *self, int port)
 	return 0;
 }
 
-konnect_socket *konnect_listen_accept(konnect_listen *self)
+konnect_socket* konnect_listen_accept(konnect_listen* self)
 {
-	struct sockaddr_in	incoming_address;
-	socklen_t			len = sizeof(incoming_address);
-	int					handle = accept(self->socket.handle, (struct sockaddr *) &incoming_address, &len);
+	struct sockaddr_in incoming_address;
+	socklen_t len = sizeof(incoming_address);
+	int handle = accept(self->socket.handle, (struct sockaddr*) &incoming_address, &len);
 	if (handle == -1) {
 		konnect_error(handle, "listen_accept:accept");
 		return 0;
@@ -69,8 +69,8 @@ konnect_socket *konnect_listen_accept(konnect_listen *self)
 		return 0;
 	}
 
-	konnect_socket	*accepted_socket = konnect_socket_tcp_new();
-	int				init_error = konnect_socket_tcp_init(accepted_socket, handle);
+	konnect_socket* accepted_socket = konnect_socket_tcp_new();
+	int init_error = konnect_socket_tcp_init(accepted_socket, handle);
 	if (init_error) {
 		konnect_error(init_error, "listen_accept: tcp_init");
 	}
@@ -78,7 +78,7 @@ konnect_socket *konnect_listen_accept(konnect_listen *self)
 	return accepted_socket;
 }
 
-int konnect_listen_close(konnect_listen *self)
+int konnect_listen_close(konnect_listen* self)
 {
 	return konnect_socket_close(&self->socket);
 }

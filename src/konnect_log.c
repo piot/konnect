@@ -24,17 +24,17 @@ THE SOFTWARE.
 #include <stdarg.h>
 #include <stdio.h>
 
-static void internal_log(const char *format, va_list ap)
+static void internal_log(const char* format, va_list ap)
 {
-	char	buf[1024];
+	char buf[1024];
 
 	if (
 #ifdef KONNECT_OS_WINDOWS
-	_vsnprintf(buf, sizeof(buf), format, ap)
+		_vsnprintf(buf, sizeof(buf), format, ap)
 #else
-	vsnprintf(buf, sizeof(buf), format, ap)
+		vsnprintf(buf, sizeof(buf), format, ap)
 #endif
-	< 0) {
+		< 0) {
 		buf[sizeof(buf) - 1] = '\0';
 	}
 
@@ -47,7 +47,7 @@ static void internal_log(const char *format, va_list ap)
 #endif
 }
 
-void konnect_log(const char *format, ...)
+void konnect_log(const char* format, ...)
 {
 	va_list argument_list;
 

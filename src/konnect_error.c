@@ -24,7 +24,7 @@ THE SOFTWARE.
 #include "konnect/konnect_error.h"
 #include "konnect/konnect_log.h"
 
-int konnect_error(int error, const char *message)
+int konnect_error(int error, const char* message)
 {
 	konnect_log("Error:%d Message:%s", error, message);
 

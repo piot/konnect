@@ -26,23 +26,21 @@ THE SOFTWARE.
 
 #include "konnect_sockets.h"
 
-typedef struct konnect_socket
-{
-	KONNECT_SOCKET_HANDLE	handle;
-	int						should_be_freed;
+typedef struct konnect_socket {
+	KONNECT_SOCKET_HANDLE handle;
+	int should_be_freed;
 } konnect_socket;
 
-int				konnect_socket_tcp_init(konnect_socket *self, KONNECT_SOCKET_HANDLE handle);
-konnect_socket	*konnect_socket_tcp_new();
-int				konnect_socket_tcp_create_handle(konnect_socket *self);
-int				konnect_socket_tcp_options(KONNECT_SOCKET_HANDLE handle, int option_name, int flag);
-int				konnect_socket_socket_option(KONNECT_SOCKET_HANDLE handle, int option_name, int flag);
-int				konnect_socket_bind_to_local_port(konnect_socket *self, int port);
-int				konnect_socket_receive(konnect_socket *self, void *buffer, size_t max_length);
-int				konnect_socket_send(konnect_socket *self, const void *buffer, size_t length);
-int				konnect_socket_close(konnect_socket *self);
-int				konnect_socket_non_blocking(konnect_socket* self, int non_blocking);
-int				konnect_socket_select_write(konnect_socket* self, int seconds);
-
+int konnect_socket_tcp_init(konnect_socket* self, KONNECT_SOCKET_HANDLE handle);
+konnect_socket* konnect_socket_tcp_new();
+int konnect_socket_tcp_create_handle(konnect_socket* self);
+int konnect_socket_tcp_options(KONNECT_SOCKET_HANDLE handle, int option_name, int flag);
+int konnect_socket_socket_option(KONNECT_SOCKET_HANDLE handle, int option_name, int flag);
+int konnect_socket_bind_to_local_port(konnect_socket* self, int port);
+int konnect_socket_receive(konnect_socket* self, void* buffer, size_t max_length);
+int konnect_socket_send(konnect_socket* self, const void* buffer, size_t length);
+int konnect_socket_close(konnect_socket* self);
+int konnect_socket_non_blocking(konnect_socket* self, int non_blocking);
+int konnect_socket_select_write(konnect_socket* self, int seconds);
 
 #endif
