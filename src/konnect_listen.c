@@ -57,8 +57,8 @@ konnect_socket* konnect_listen_accept(konnect_listen* self)
 {
 	struct sockaddr_in incoming_address;
 	socklen_t len = sizeof(incoming_address);
-	int handle = accept(self->socket.handle, (struct sockaddr*) &incoming_address, &len);
-	if (handle == -1) {
+	KONNECT_SOCKET_HANDLE handle = accept(self->socket.handle, (struct sockaddr*) &incoming_address, &len);
+	if (handle == KONNECT_INVALID_SOCKET_HANDLE) {
 		konnect_error(handle, "listen_accept:accept");
 		return 0;
 	}
@@ -73,6 +73,7 @@ konnect_socket* konnect_listen_accept(konnect_listen* self)
 	int init_error = konnect_socket_tcp_init(accepted_socket, handle);
 	if (init_error) {
 		konnect_error(init_error, "listen_accept: tcp_init");
+		return 0;
 	}
 
 	return accepted_socket;
@@ -80,5 +81,9 @@ konnect_socket* konnect_listen_accept(konnect_listen* self)
 
 int konnect_listen_close(konnect_listen* self)
 {
+	int shutdown_error = shutdown(self->socket.handle, KONNECT_SHUTDOWN_READ_WRITE);
+	if (shutdown_error) {
+		konnect_error(shutdown_error, "konnect_listen_close: shutdown");
+	}
 	return konnect_socket_close(&self->socket);
 }

@@ -47,8 +47,7 @@ int konnect_connect_init(konnect_socket* self, const char* address, int port)
 
 	int create_error = konnect_socket_tcp_create_handle(self);
 	if (create_error) {
-		konnect_error(create_error, "connect: create_handle");
-		return create_error;
+		return konnect_error(create_error, "connect: create_handle");
 	}
 
 	struct sockaddr_in addr;
@@ -56,8 +55,7 @@ int konnect_connect_init(konnect_socket* self, const char* address, int port)
 
 	int convert_error = !inet_pton(AF_INET, address, &addr.sin_addr);
 	if (convert_error) {
-		konnect_error(convert_error, "connect: inet_aton");
-		return convert_error;
+		return konnect_error(convert_error, "connect: inet_aton");
 	}
 
 	addr.sin_port = htons(port);

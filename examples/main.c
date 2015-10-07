@@ -59,14 +59,14 @@ int server()
 int client()
 {
 	konnect_socket connection;
-	int connect_error = konnect_connect_init(&connection, "118.95.227.20", 80);
+	int connect_error = konnect_connect_init(&connection, "80.251.202.35", 80);
 	if (connect_error) {
 		konnect_log("Couldn't connect:%d", connect_error);
 		return connect_error;
 	}
 
 	const char* get = "GET / HTTP/1.1\r\nHost: "
-					  "www.something.org/\r\nConnection: close\r\n\r\n";
+					  "www.google.com/\r\nConnection: close\r\n\r\n";
 
 	konnect_socket_send(&connection, get, strlen(get));
 
@@ -88,7 +88,7 @@ int client()
 	return 0;
 }
 
-int main(int argc, const char* argv[])
+int main()
 {
 	konnect_sockets_init();
 	// server();

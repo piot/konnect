@@ -63,8 +63,8 @@ int konnect_socket_tcp_init(konnect_socket* self, KONNECT_SOCKET_HANDLE handle)
 
 int konnect_socket_tcp_create_handle(konnect_socket* self)
 {
-	int handle = socket(AF_INET, SOCK_STREAM, 0);
-	if (handle == -1) {
+	KONNECT_SOCKET_HANDLE handle = socket(AF_INET, SOCK_STREAM, 0);
+	if (handle == KONNECT_INVALID_SOCKET_HANDLE) {
 		return -1;
 	}
 
@@ -145,7 +145,7 @@ int konnect_socket_select_write(konnect_socket* self, int seconds)
 	timeout.tv_sec = seconds;
 	timeout.tv_usec = 0;
 
-	int descriptors_ready = select(self->handle + 1, 0, &set, 0, &timeout);
+	int descriptors_ready = select((int) self->handle + 1, 0, &set, 0, &timeout);
 	if (descriptors_ready != 1) {
 		return -1;
 	}
