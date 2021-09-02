@@ -59,7 +59,11 @@ konnect_socket* konnect_listen_accept(konnect_listen* self)
 	socklen_t len = sizeof(incoming_address);
 	KONNECT_SOCKET_HANDLE handle = accept(self->socket.handle, (struct sockaddr*) &incoming_address, &len);
 	if (handle == KONNECT_INVALID_SOCKET_HANDLE) {
-		konnect_error(handle, "listen_accept:accept");
+		int err = KONNECT_GET_ERROR;
+		if (err == EAGAIN || err == KONNECT_WOULDBLOCK_ERROR) {
+			return 0;
+		}
+		konnect_error(errno, "listen_accept:accept");
 		return 0;
 	}
 
