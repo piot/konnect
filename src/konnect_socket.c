@@ -87,6 +87,16 @@ int konnect_socket_bind_to_local_port(konnect_socket* self, int port)
 int konnect_socket_receive(konnect_socket* self, void* buffer, size_t max_length)
 {
 	int length = recv(self->handle, buffer, max_length, 0);
+	if (length < 0) {
+		int err = KONNECT_GET_ERROR;
+		if (err == KONNECT_WOULDBLOCK_ERROR) {
+			return 0;
+		}
+		if (err == KONNECT_NOT_CONNECTED_ERROR) {
+			return 0;
+		}
+		return -1;
+	}
 	return length;
 }
 
