@@ -28,7 +28,9 @@ THE SOFTWARE.
 #include "konnect/konnect_log.h"
 
 #include <fcntl.h>
+#if !WIN32
 #include <sys/select.h>
+#endif
 
 static int konnect_socket_option(KONNECT_SOCKET_HANDLE handle, int level, int option_name, int flag)
 {
