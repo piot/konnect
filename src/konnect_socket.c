@@ -49,7 +49,7 @@ int konnect_socket_socket_option(KONNECT_SOCKET_HANDLE handle, int option_name, 
 	return konnect_socket_option(handle, SOL_SOCKET, option_name, flag);
 }
 
-konnect_socket* konnect_socket_tcp_new()
+konnect_socket* konnect_socket_tcp_new(void)
 {
 	konnect_socket* socket = (konnect_socket*) calloc(1, sizeof(konnect_socket));
 	socket->should_be_freed = 1;

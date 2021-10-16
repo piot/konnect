@@ -24,7 +24,7 @@ THE SOFTWARE.
 #include "konnect/konnect_sockets.h"
 #include "konnect/konnect_platform.h"
 
-int konnect_sockets_init()
+int konnect_sockets_init(void)
 {
 #if defined KONNECT_OS_WINDOWS
 	int result;

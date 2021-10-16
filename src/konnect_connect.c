@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include <arpa/inet.h>
 #endif
 
-int konnect_get_last_error()
+int konnect_get_last_error(void)
 {
 #if defined KONNECT_OS_WINDOWS
 	return WSAGetLastError();

@@ -57,7 +57,7 @@ THE SOFTWARE.
 #include <unistd.h>
 #define KONNECT_SOCKET_CLOSE close
 #endif
-int konnect_sockets_init();
+int konnect_sockets_init(void);
 
 typedef unsigned char uint8_t;
 
