@@ -28,6 +28,7 @@ THE SOFTWARE.
 #include "konnect/konnect_log.h"
 
 #include <fcntl.h>
+#include <konnect/konnect_error.h>
 #if !WIN32
 #include <sys/select.h>
 #endif
