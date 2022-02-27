@@ -23,6 +23,7 @@ THE SOFTWARE.
 */
 #include <stdarg.h>
 #include <stdio.h>
+#include <konnect/konnect_log.h>
 
 static void internal_log(const char* format, va_list ap)
 {
