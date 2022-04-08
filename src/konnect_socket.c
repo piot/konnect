@@ -32,6 +32,7 @@ THE SOFTWARE.
 #if !WIN32
 #include <sys/select.h>
 #endif
+#include <tiny-libc/tiny_libc.h>
 
 static int konnect_socket_option(KONNECT_SOCKET_HANDLE handle, int level, int option_name, int flag)
 {
@@ -52,7 +53,7 @@ int konnect_socket_socket_option(KONNECT_SOCKET_HANDLE handle, int option_name, 
 
 konnect_socket* konnect_socket_tcp_new(void)
 {
-	konnect_socket* socket = (konnect_socket*) calloc(1, sizeof(konnect_socket));
+	konnect_socket* socket = (konnect_socket*) tc_calloc(1, sizeof(konnect_socket));
 	socket->should_be_freed = 1;
 
 	return socket;
@@ -119,7 +120,7 @@ int konnect_socket_close(konnect_socket* self)
 	self->handle = 0;
 	if (self->should_be_freed) {
 		konnect_log("freeing %d", self->handle);
-		free(self);
+		tc_free(self);
 	}
 
 	return close_error;
